@@ -1,0 +1,70 @@
+---
+import type { ResponsiveImage } from "../lib/smugmug";
+import SmugMugImage from "./SmugMugImage.astro";
+
+interface Props {
+  images: ResponsiveImage[];
+}
+
+const { images } = Astro.props;
+const gridSizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
+---
+
+<div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    images.map((image, i) => (
+      <button
+        type="button"
+        class="lightbox-trigger group relative block aspect-[4/5] w-full overflow-hidden bg-stone-light"
+        data-src={image.src}
+        data-srcset={image.srcset}
+        data-alt={image.alt}
+        aria-label={`View larger image: ${image.alt}`}
+      >
+        <SmugMugImage
+          image={image}
+          sizes={gridSizes}
+          priority={i < 3}
+          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </button>
+    ))
+  }
+</div>
+
+<dialog
+  id="lightbox"
+  class="m-auto max-h-[90vh] max-w-[95vw] overflow-hidden bg-transparent p-0 backdrop:bg-ink/90"
+>
+  <button
+    type="button"
+    id="lightbox-close"
+    class="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-paper/90 text-xl leading-none"
+    aria-label="Close"
+  >
+    &times;
+  </button>
+  <img id="lightbox-image" src="" alt="" class="max-h-[90vh] max-w-[95vw] object-contain" />
+</dialog>
+
+<script>
+  const dialog = document.getElementById("lightbox") as HTMLDialogElement | null;
+  const lightboxImage = document.getElementById("lightbox-image") as HTMLImageElement | null;
+  const closeBtn = document.getElementById("lightbox-close");
+
+  document.querySelectorAll<HTMLButtonElement>(".lightbox-trigger").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      if (!dialog || !lightboxImage) return;
+      lightboxImage.src = trigger.dataset.src ?? "";
+      lightboxImage.srcset = trigger.dataset.srcset ?? "";
+      lightboxImage.sizes = "95vw";
+      lightboxImage.alt = trigger.dataset.alt ?? "";
+      dialog.showModal();
+    });
+  });
+
+  closeBtn?.addEventListener("click", () => dialog?.close());
+  dialog?.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+</script>

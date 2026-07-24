@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.neiljohnsonevents.com/sitemap-index.xml

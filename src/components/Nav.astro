@@ -1,0 +1,93 @@
+---
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/portfolio/weddings", label: "Weddings" },
+  { href: "/portfolio/events", label: "Events" },
+  { href: "/portfolio/headshots", label: "Headshots" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-paper/95 backdrop-blur border-b border-stone-light">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+    <a href="/" class="font-display text-xl tracking-wide sm:text-2xl">
+      Neil Johnson <span class="text-accent">Events</span>
+    </a>
+
+    <button
+      id="nav-toggle"
+      class="flex flex-col gap-1.5 p-2 sm:hidden"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span class="h-px w-6 bg-ink transition-transform"></span>
+      <span class="h-px w-6 bg-ink transition-opacity"></span>
+      <span class="h-px w-6 bg-ink transition-transform"></span>
+    </button>
+
+    <nav class="hidden sm:block" aria-label="Primary">
+      <ul class="flex items-center gap-8 text-sm uppercase tracking-wider">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class:list={[
+                  "transition-colors hover:text-accent",
+                  currentPath === link.href && "text-accent",
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    class="hidden border-t border-stone-light sm:hidden"
+    aria-label="Primary mobile"
+  >
+    <ul class="flex flex-col gap-1 px-5 py-4 text-base uppercase tracking-wider">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class:list={[
+                "block py-2 transition-colors hover:text-accent",
+                currentPath === link.href && "text-accent",
+              ]}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById("nav-toggle");
+  const menu = document.getElementById("mobile-menu");
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = menu?.classList.toggle("hidden") === false;
+    toggle.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  menu?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      menu.classList.add("hidden");
+      toggle?.setAttribute("aria-expanded", "false");
+    });
+  });
+</script>

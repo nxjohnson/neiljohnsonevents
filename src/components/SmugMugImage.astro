@@ -1,0 +1,30 @@
+---
+import type { ResponsiveImage } from "../lib/smugmug";
+
+interface Props {
+  image: ResponsiveImage;
+  sizes?: string;
+  class?: string;
+  priority?: boolean;
+}
+
+const {
+  image,
+  sizes = "(min-width: 1024px) 33vw, 100vw",
+  class: className,
+  priority = false,
+} = Astro.props;
+---
+
+<img
+  src={image.src}
+  srcset={image.srcset || undefined}
+  sizes={image.srcset ? sizes : undefined}
+  width={image.width}
+  height={image.height}
+  alt={image.alt}
+  loading={priority ? "eager" : "lazy"}
+  decoding={priority ? "sync" : "async"}
+  fetchpriority={priority ? "high" : "auto"}
+  class={className}
+/>

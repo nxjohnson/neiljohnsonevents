@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Gallery from "../../components/Gallery.astro";
+import { services, locations, buildLandingCopy } from "../../config/seo";
+import { getGalleryBySlug } from "../../config/galleries";
+import { getGalleryImages } from "../../lib/smugmug";
+
+export async function getStaticPaths() {
+  return services.flatMap((service) =>
+    locations.map((location) => ({
+      params: { service: service.slug, location: location.slug },
+      props: { service, location },
+    }))
+  );
+}
+
+const { service, location } = Astro.props;
+const { title, description, intro } = buildLandingCopy(service, location);
+
+const gallery = getGalleryBySlug(service.gallerySlug);
+const allImages = gallery ? await getGalleryImages(gallery.albumKey, `${service.label} photo`) : [];
+const previewImages = allImages.slice(0, 6);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: title,
+  description,
+  areaServed: { "@type": "AdministrativeArea", name: `${location.label}, CA` },
+  provider: {
+    "@type": "ProfessionalService",
+    name: "Neil Johnson Events",
+    url: "https://www.neiljohnsonevents.com",
+  },
+};
+---
+
+<BaseLayout title={title} description={description} image={previewImages[0]?.src} schema={schema}>
+  <section class="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-24">
+    <h1 class="font-display text-3xl sm:text-5xl">{title}</h1>
+    <p class="mt-4 text-stone">{intro}</p>
+    <a
+      href="/contact"
+      class="mt-6 inline-block bg-ink px-6 py-3 text-sm uppercase tracking-wider text-paper transition-colors hover:bg-accent"
+    >
+      Reserve Your Date
+    </a>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-24">
+    {
+      previewImages.length > 0 ? (
+        <Gallery images={previewImages} />
+      ) : (
+        <p class="py-8 text-center text-stone">Gallery coming soon.</p>
+      )
+    }
+    {
+      gallery && (
+        <div class="mt-8 text-center">
+          <a
+            href={`/portfolio/${gallery.slug}`}
+            class="border-b border-ink pb-1 text-sm uppercase tracking-wider transition-colors hover:border-accent hover:text-accent"
+          >
+            View Full {gallery.label} Portfolio
+          </a>
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

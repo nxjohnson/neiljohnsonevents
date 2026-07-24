@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="About"
+  description="Meet Neil Johnson — wedding, corporate event, conference, and headshot photographer serving Los Angeles County and Orange County."
+>
+  <section class="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
+    <h1 class="font-display text-3xl sm:text-5xl">About Neil</h1>
+
+    {
+      /* TODO(Neil): Replace with your real bio copy from the live site —
+         this is placeholder text based on the site's general tone, not a verbatim copy. */
+    }
+    <div class="mt-6 space-y-4 text-stone">
+      <p>
+        I'm Neil Johnson, a wedding, corporate event, conference, and headshot photographer based
+        in Los Angeles County, serving clients throughout LA and Orange County.
+      </p>
+      <p>
+        I strive to capture every moment with a blend of creativity and precision — from
+        candid, unscripted emotion on a wedding day to polished, professional headshots for
+        your business. My goal is always the same: authentic images you'll want to look back on
+        for years to come.
+      </p>
+      <p>
+        Whether you're planning a wedding at a winery, a corporate conference, or need updated
+        headshots for your team, I'd love to hear about your event.
+      </p>
+    </div>
+
+    <a
+      href="/contact"
+      class="mt-8 inline-block bg-ink px-6 py-3 text-sm uppercase tracking-wider text-paper transition-colors hover:bg-accent"
+    >
+      Get In Touch
+    </a>
+  </section>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-stone-light bg-paper">
+  <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <p class="font-display text-lg">Neil Johnson Events</p>
+        <p class="mt-1 text-sm text-stone">
+          Wedding &amp; event photography across Los Angeles County &amp; Orange County
+        </p>
+      </div>
+
+      <nav aria-label="Footer">
+        <ul class="flex flex-wrap gap-x-6 gap-y-2 text-sm uppercase tracking-wider text-stone">
+          <li><a href="/portfolio/weddings" class="hover:text-accent">Weddings</a></li>
+          <li><a href="/portfolio/events" class="hover:text-accent">Events</a></li>
+          <li><a href="/portfolio/headshots" class="hover:text-accent">Headshots</a></li>
+          <li><a href="/about" class="hover:text-accent">About</a></li>
+          <li><a href="/contact" class="hover:text-accent">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <p class="mt-8 text-xs text-stone">
+      &copy; {year} Neil Johnson Events. All rights reserved.
+    </p>
+  </div>
+</footer>
