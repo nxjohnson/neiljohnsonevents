@@ -4,7 +4,9 @@
 // Response shape reference (SmugMug API v2):
 //   { Response: { <Locator>: [...] | {...}, Pages: {...} }, Code, Message }
 // Albums list locator: "Album" (array). Album images locator: "AlbumImage" (array).
-// Each image, expanded with `_expand=ImageSizeDetails`, nests per-size objects under
+// `_expand=ImageSizeDetails` on the album list is NOT honored under API-key-only auth,
+// so each image's real per-size data is fetched separately via its `Uris.ImageSizeDetails.Uri`
+// link, which nests per-size objects under
 // ImageSizeDetails.ImageSize{Tiny,Thumb,Small,Medium,Large,XLarge,X2Large,X3Large}.Url/Width/Height.
 
 const API_BASE = "https://api.smugmug.com/api/v2";
@@ -37,6 +39,9 @@ interface SmugMugImage {
   OriginalWidth: number;
   OriginalHeight: number;
   ImageSizeDetails?: SmugMugImageSizeDetails;
+  Uris?: {
+    ImageSizeDetails?: { Uri: string };
+  };
 }
 
 interface SmugMugAlbum {
@@ -77,6 +82,32 @@ async function smugmugFetch<T>(path: string, params: Record<string, string> = {}
   return res.json() as Promise<T>;
 }
 
+/** Fetch an absolute API path returned by the API itself (e.g. a Uris.*.Uri link). */
+async function smugmugFetchByUri<T>(uri: string): Promise<T> {
+  const url = new URL(`https://api.smugmug.com${uri}`);
+  url.searchParams.set("APIKey", apiKey());
+
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!res.ok) {
+    throw new Error(`SmugMug API error ${res.status} for ${uri}: ${await res.text()}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+/**
+ * Fetch real per-size URLs/dimensions for one image. The album list endpoint's
+ * `_expand=ImageSizeDetails` is not honored under API-key-only auth, so each
+ * image only carries a link to this endpoint (`Uris.ImageSizeDetails.Uri`) —
+ * without this call the code would silently fall back to `ThumbnailUrl`, a
+ * 150x150 square crop, mislabeled with the original image's width/height.
+ */
+async function getImageSizeDetails(uri: string): Promise<SmugMugImageSizeDetails | undefined> {
+  const data = await smugmugFetchByUri<{ Response: { ImageSizeDetails?: SmugMugImageSizeDetails } }>(
+    uri
+  );
+  return data.Response.ImageSizeDetails;
+}
+
 /** List all albums for the configured account. */
 export async function getAlbums(nickname: string): Promise<SmugMugAlbum[]> {
   const data = await smugmugFetch<{ Response: { Album?: SmugMugAlbum[] } }>(
@@ -86,13 +117,28 @@ export async function getAlbums(nickname: string): Promise<SmugMugAlbum[]> {
   return data.Response.Album ?? [];
 }
 
-/** List all images in an album, expanded with size details for responsive srcset. */
+const SIZE_DETAILS_CONCURRENCY = 8;
+
+/** List all images in an album, with size details fetched per-image for responsive srcset. */
 export async function getAlbumImages(albumKey: string): Promise<SmugMugImage[]> {
   const data = await smugmugFetch<{ Response: { AlbumImage?: SmugMugImage[] } }>(
     `/album/${albumKey}!images`,
-    { _expand: "ImageSizeDetails", count: "200" }
+    { count: "200" }
   );
-  return data.Response.AlbumImage ?? [];
+  const images = data.Response.AlbumImage ?? [];
+
+  for (let i = 0; i < images.length; i += SIZE_DETAILS_CONCURRENCY) {
+    const batch = images.slice(i, i + SIZE_DETAILS_CONCURRENCY);
+    await Promise.all(
+      batch.map(async (img) => {
+        const uri = img.Uris?.ImageSizeDetails?.Uri;
+        if (!uri) return;
+        img.ImageSizeDetails = await getImageSizeDetails(uri);
+      })
+    );
+  }
+
+  return images;
 }
 
 const SRCSET_ORDER: (keyof SmugMugImageSizeDetails)[] = [

@@ -24,7 +24,7 @@ export const galleries: GalleryCategory[] = [
   {
     slug: "events",
     label: "Events",
-    albumKey: "TODO-EVENTS-ALBUM-KEY",
+    albumKey: "6wRgR8",
     heading: "Corporate Event & Conference Photography",
     description:
       "Corporate event and conference photography for businesses across Los Angeles County and Orange County.",
