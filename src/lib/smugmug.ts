@@ -126,6 +126,7 @@ export async function getAlbumImages(albumKey: string): Promise<SmugMugImage[]> 
     { count: "200" }
   );
   const images = data.Response.AlbumImage ?? [];
+  images.sort((a, b) => a.FileName.localeCompare(b.FileName, undefined, { numeric: true }));
 
   for (let i = 0; i < images.length; i += SIZE_DETAILS_CONCURRENCY) {
     const batch = images.slice(i, i + SIZE_DETAILS_CONCURRENCY);

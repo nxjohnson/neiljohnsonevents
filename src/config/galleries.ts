@@ -16,7 +16,7 @@ export const galleries: GalleryCategory[] = [
   {
     slug: "weddings",
     label: "Weddings",
-    albumKey: "TODO-WEDDINGS-ALBUM-KEY",
+    albumKey: "hDBJG2",
     heading: "Wedding Photography",
     description:
       "Wedding photography across Los Angeles County and Orange County — capturing every moment with creativity and precision.",
@@ -32,7 +32,7 @@ export const galleries: GalleryCategory[] = [
   {
     slug: "headshots",
     label: "Headshots",
-    albumKey: "TODO-HEADSHOTS-ALBUM-KEY",
+    albumKey: "x5mcLx",
     heading: "Headshot Photography",
     description:
       "Professional headshot photography for individuals and businesses across Los Angeles County and Orange County.",
