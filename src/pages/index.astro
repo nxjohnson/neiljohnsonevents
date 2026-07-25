@@ -1,20 +1,33 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SmugMugImage from "../components/SmugMugImage.astro";
-import { galleries } from "../config/galleries";
+import { galleries, type GalleryCategory } from "../config/galleries";
 import { getGalleryImages } from "../lib/smugmug";
 
 const galleryImages = await Promise.all(
   galleries.map((g) => getGalleryImages(g.albumKey, `${g.label} photo`))
 );
 
-const tileImages = galleries.map((g, i) => ({ category: g, image: galleryImages[i][0] }));
+// Pinned by SmugMug's permanent ImageKey (not array position) so these stay put
+// even if an album is reordered, images are added, or images are removed.
+const PINNED_IMAGE_KEYS: Record<GalleryCategory["slug"], string> = {
+  weddings: "d6nGnqZ", // #30 — 30_01-Cass-Winery-Paso-Robles-Wedding-Photography.jpg
+  events: "ntbbBm3", // #1 — 01_01-Las-Vegas-Nevada-Concert-Photography.jpg
+  headshots: "jp67F4C", // #15 — 15_02-Los-Angeles-County-Business-Headshot-Photography.jpg
+};
+
+function pinnedImage(slug: GalleryCategory["slug"], images: (typeof galleryImages)[number]) {
+  const key = PINNED_IMAGE_KEYS[slug];
+  return images.find((img) => img.key === key) ?? images[0];
+}
+
+const tileImages = galleries.map((g, i) => ({
+  category: g,
+  image: pinnedImage(g.slug, galleryImages[i]),
+}));
 
 const weddingImages = galleryImages[galleries.findIndex((g) => g.slug === "weddings")] ?? [];
-// 30_01-Cass-Winery-Paso-Robles-Wedding-Photography.jpg — pinned by SmugMug's
-// permanent ImageKey so the hero stays put even if the album is reordered.
-const HERO_IMAGE_KEY = "d6nGnqZ";
-const hero = weddingImages.find((img) => img.key === HERO_IMAGE_KEY) ?? weddingImages[0];
+const hero = pinnedImage("weddings", weddingImages);
 
 const schema = {
   "@context": "https://schema.org",
