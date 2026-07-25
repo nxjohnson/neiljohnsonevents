@@ -4,14 +4,17 @@ import SmugMugImage from "../components/SmugMugImage.astro";
 import { galleries } from "../config/galleries";
 import { getGalleryImages } from "../lib/smugmug";
 
-const tileImages = await Promise.all(
-  galleries.map(async (g) => {
-    const images = await getGalleryImages(g.albumKey, `${g.label} photo`);
-    return { category: g, image: images[0] };
-  })
+const galleryImages = await Promise.all(
+  galleries.map((g) => getGalleryImages(g.albumKey, `${g.label} photo`))
 );
 
-const hero = tileImages[0]?.image;
+const tileImages = galleries.map((g, i) => ({ category: g, image: galleryImages[i][0] }));
+
+const weddingImages = galleryImages[galleries.findIndex((g) => g.slug === "weddings")] ?? [];
+// 30_01-Cass-Winery-Paso-Robles-Wedding-Photography.jpg — pinned by SmugMug's
+// permanent ImageKey so the hero stays put even if the album is reordered.
+const HERO_IMAGE_KEY = "d6nGnqZ";
+const hero = weddingImages.find((img) => img.key === HERO_IMAGE_KEY) ?? weddingImages[0];
 
 const schema = {
   "@context": "https://schema.org",
@@ -112,7 +115,7 @@ const schema = {
         &ldquo;From start to finish, the experience was nothing short of amazing.&rdquo;
       </p>
       <footer class="mt-4 text-sm uppercase tracking-wider text-paper/70">
-        Laboni &amp; Matthew
+        — Laboni &amp; Matthew
       </footer>
     </blockquote>
   </section>

@@ -26,6 +26,7 @@ interface SmugMugImageSizeDetails {
   ImageSizeXLarge?: SmugMugImageSize;
   ImageSizeX2Large?: SmugMugImageSize;
   ImageSizeX3Large?: SmugMugImageSize;
+  ImageSizeX4Large?: SmugMugImageSize;
   ImageSizeOriginal?: SmugMugImageSize;
 }
 
@@ -149,6 +150,7 @@ const SRCSET_ORDER: (keyof SmugMugImageSizeDetails)[] = [
   "ImageSizeXLarge",
   "ImageSizeX2Large",
   "ImageSizeX3Large",
+  "ImageSizeX4Large",
 ];
 
 /** Turn a SmugMug image + its expanded size details into a mobile-first responsive image. */
