@@ -33,8 +33,10 @@ const hero = pinnedImage("weddings", weddingImages);
 // that don't belong to a portfolio category, e.g. the homepage testimonial photo.
 const MISC_ALBUM_KEY = "qQfB7n";
 const TESTIMONIAL_IMAGE_KEY = "CR4W4Zk"; // 6_0020-LM-Cayucos-San-Luis-Obispo-County-Engagement-Photography.jpg
+const CTA_IMAGE_KEY = "bsmZznM"; // 7_05-Colony-Estate-Ventura-County-Wedding-Photography.jpg
 const miscImages = await getGalleryImages(MISC_ALBUM_KEY, "Neil Johnson Events client photo");
 const testimonialImage = miscImages.find((img) => img.key === TESTIMONIAL_IMAGE_KEY);
+const ctaImage = miscImages.find((img) => img.key === CTA_IMAGE_KEY);
 
 const schema = {
   "@context": "https://schema.org",
@@ -151,6 +153,15 @@ const schema = {
 
   <!-- CTA -->
   <section class="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-24">
+    {
+      ctaImage && (
+        <SmugMugImage
+          image={ctaImage}
+          sizes="(min-width: 640px) 320px, 60vw"
+          class="mx-auto mb-8 w-48 object-cover sm:w-64"
+        />
+      )
+    }
     <h2 class="font-display text-3xl sm:text-4xl">Reserve Your Date</h2>
     <p class="mt-4 text-stone">
       Booking weddings, events, conferences, and headshot sessions across LA and Orange County.
