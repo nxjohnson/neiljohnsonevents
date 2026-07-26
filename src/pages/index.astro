@@ -29,6 +29,13 @@ const tileImages = galleries.map((g, i) => ({
 const weddingImages = galleryImages[galleries.findIndex((g) => g.slug === "weddings")] ?? [];
 const hero = pinnedImage("weddings", weddingImages);
 
+// Misc gallery (https://clients.neiljohnsonevents.com/Website/Misc) — one-off photos
+// that don't belong to a portfolio category, e.g. the homepage testimonial photo.
+const MISC_ALBUM_KEY = "qQfB7n";
+const TESTIMONIAL_IMAGE_KEY = "CR4W4Zk"; // 6_0020-LM-Cayucos-San-Luis-Obispo-County-Engagement-Photography.jpg
+const miscImages = await getGalleryImages(MISC_ALBUM_KEY, "Neil Johnson Events client photo");
+const testimonialImage = miscImages.find((img) => img.key === TESTIMONIAL_IMAGE_KEY);
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
@@ -123,6 +130,15 @@ const schema = {
 
   <!-- Testimonial -->
   <section class="bg-ink px-5 py-16 text-center text-paper sm:px-8 sm:py-24">
+    {
+      testimonialImage && (
+        <SmugMugImage
+          image={testimonialImage}
+          sizes="(min-width: 640px) 320px, 60vw"
+          class="mx-auto mb-8 w-48 object-cover sm:w-64"
+        />
+      )
+    }
     <blockquote class="mx-auto max-w-2xl">
       <p class="font-display text-2xl leading-relaxed sm:text-3xl">
         &ldquo;From start to finish, the experience was nothing short of amazing.&rdquo;
