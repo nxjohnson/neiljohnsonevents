@@ -1,48 +1,33 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SmugMugImage from "../components/SmugMugImage.astro";
-import { galleries, type GalleryCategory } from "../config/galleries";
+import CategoryTiles from "../components/CategoryTiles.astro";
+import { galleries, getGalleryBySlug, pinnedImage, toTiles } from "../config/galleries";
 import { getGalleryImages } from "../lib/smugmug";
 
-const galleryImages = await Promise.all(
-  galleries.map((g) => getGalleryImages(g.albumKey, `${g.label} photo`))
-);
+// Misc gallery (https://clients.neiljohnsonevents.com/Website/Misc) — one-off photos
+// that don't belong to a portfolio category (the testimonial + CTA photos).
+const MISC_ALBUM_KEY = "qQfB7n";
 
-// Pinned by SmugMug's permanent ImageKey (not array position) so these stay put
-// even if an album is reordered, images are added, or images are removed.
-const PINNED_IMAGE_KEYS: Record<GalleryCategory["slug"], string> = {
-  weddings: "d6nGnqZ", // #30 — 30_01-Cass-Winery-Paso-Robles-Wedding-Photography.jpg
-  events: "ntbbBm3", // #1 — 01_01-Las-Vegas-Nevada-Concert-Photography.jpg
-  headshots: "jp67F4C", // #15 — 15_02-Los-Angeles-County-Business-Headshot-Photography.jpg
-};
+// Fetch the category albums + the misc album in parallel.
+const [galleryImages, miscImages] = await Promise.all([
+  Promise.all(galleries.map((g) => getGalleryImages(g.albumKey, `${g.label} photo`))),
+  getGalleryImages(MISC_ALBUM_KEY, "Neil Johnson Events client photo"),
+]);
 
-function pinnedImage(slug: GalleryCategory["slug"], images: (typeof galleryImages)[number]) {
-  const key = PINNED_IMAGE_KEYS[slug];
-  return images.find((img) => img.key === key) ?? images[0];
-}
+const tileImages = toTiles(galleryImages);
 
-const tileImages = galleries.map((g, i) => ({
-  category: g,
-  image: pinnedImage(g.slug, galleryImages[i]),
-}));
+// Hero — single full-width Cass Winery star-trail photo (the weddings pinned image).
+const weddings = getGalleryBySlug("weddings")!;
+const weddingImages = galleryImages[galleries.indexOf(weddings)] ?? [];
+const hero = pinnedImage(weddingImages, weddings.pinnedKey);
 
-const weddingImages = galleryImages[galleries.findIndex((g) => g.slug === "weddings")] ?? [];
-
-// Original home page opens with a single full-width photo (no text overlay):
-// the Cass Winery, Paso Robles star-trail wedding shot, shown at its natural aspect ratio.
-const hero = pinnedImage("weddings", weddingImages);
-
-// "Capturing Memories" section — portrait photo on the right (original used the
-// Bahia Resort Hotel, San Diego County wedding shot).
+// "Capturing Memories" — Bahia Resort Hotel, San Diego County portrait.
 const CAPTURING_MEMORIES_IMAGE_KEY = "D9K3Hr7"; // 09_03-Bahia-Resort-Hotel-San-Diego-County-Wedding-Photography.jpg
 const capturingImage = weddingImages.find((img) => img.key === CAPTURING_MEMORIES_IMAGE_KEY);
 
-// Misc gallery (https://clients.neiljohnsonevents.com/Website/Misc) — one-off photos
-// that don't belong to a portfolio category, e.g. the homepage testimonial photo.
-const MISC_ALBUM_KEY = "qQfB7n";
 const TESTIMONIAL_IMAGE_KEY = "CR4W4Zk"; // 6_0020-LM-Cayucos-San-Luis-Obispo-County-Engagement-Photography.jpg
 const CTA_IMAGE_KEY = "bsmZznM"; // 7_05-Colony-Estate-Ventura-County-Wedding-Photography.jpg
-const miscImages = await getGalleryImages(MISC_ALBUM_KEY, "Neil Johnson Events client photo");
 const testimonialImage = miscImages.find((img) => img.key === TESTIMONIAL_IMAGE_KEY);
 const ctaImage = miscImages.find((img) => img.key === CTA_IMAGE_KEY);
 
@@ -63,7 +48,7 @@ const schema = {
   schema={schema}
 >
   <!-- Hero: single full-width photo (inset with the site gutter), no text overlay -->
-  <section class="mx-auto max-w-[1600px] px-[6vw] sm:px-[4vw]">
+  <section class="gutter">
     {
       hero ? (
         <SmugMugImage image={hero} priority sizes="(min-width: 1600px) 1472px, 92vw" class="reveal block h-auto w-full" />
@@ -74,11 +59,11 @@ const schema = {
   </section>
 
   <!-- Capturing Memories: text left, portrait photo right -->
-  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24">
-    <div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16" data-reveal-group>
+  <section class="gutter py-16 sm:py-24">
+    <div class="split-2" data-reveal-group>
       <div>
         <h2 class="reveal text-5xl sm:text-6xl">Capturing Memories</h2>
-        <p class="reveal mt-6 leading-relaxed text-stone">
+        <p class="reveal mt-6 text-stone">
           Every event is filled with moments that make it truly special. I strive to capture these
           moments with a blend of creativity and precision, ensuring that each photograph reflects
           the beauty and emotion of your day. Together, we can create a collection of memories
@@ -99,37 +84,14 @@ const schema = {
   </section>
 
   <!-- Photography For Every Occasion -->
-  <section class="mx-auto max-w-[1600px] px-[6vw] pb-16 sm:px-[4vw] sm:pb-24" data-reveal-group>
+  <section class="gutter pb-16 sm:pb-24" data-reveal-group>
     <h2 class="reveal mb-10 text-center text-5xl sm:mb-14 sm:text-6xl">Photography For Every Occasion</h2>
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
-      {
-        tileImages.map(({ category, image }) => (
-          <a
-            href={`/portfolio/${category.slug}`}
-            class="group reveal relative block aspect-[4/5] overflow-hidden bg-stone-light"
-          >
-            {image ? (
-              <SmugMugImage
-                image={image}
-                sizes="(min-width: 640px) 33vw, 100vw"
-                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            ) : (
-              <div class="h-full w-full bg-stone-light" />
-            )}
-            <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
-            <span class="absolute bottom-4 left-4 font-display text-3xl text-paper sm:bottom-6 sm:left-6 sm:text-4xl">
-              {category.label}
-            </span>
-          </a>
-        ))
-      }
-    </div>
+    <CategoryTiles tiles={tileImages} />
   </section>
 
   <!-- Testimonial: photo left, quote right -->
-  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24">
-    <div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16" data-reveal-group>
+  <section class="gutter py-16 sm:py-24">
+    <div class="split-2" data-reveal-group>
       {
         testimonialImage && (
           <SmugMugImage
@@ -149,8 +111,8 @@ const schema = {
   </section>
 
   <!-- CTA: text left, photo right -->
-  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24">
-    <div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16" data-reveal-group>
+  <section class="gutter py-16 sm:py-24">
+    <div class="split-2" data-reveal-group>
       <div>
         <h2 class="reveal text-5xl sm:text-6xl">Reserve your date</h2>
         <p class="reveal mt-6 text-stone">I&rsquo;m excited to hear more about your special event!</p>

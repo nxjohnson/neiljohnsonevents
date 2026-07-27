@@ -52,6 +52,27 @@ h4 {
     background-color: var(--color-ink);
     color: var(--color-paper);
   }
+
+  /* Page container: site max-width + responsive side gutters. Add vertical padding
+     per section, e.g. `class="gutter py-16 sm:py-24"`. Used by every page + Nav/Footer
+     so margins stay consistent and new pages get them for free. */
+  .gutter {
+    @apply mx-auto max-w-[1600px] px-[6vw] sm:px-[4vw];
+  }
+
+  /* Standard two-column media/text row (stacks on mobile). */
+  .split-2 {
+    @apply grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16;
+  }
+
+  /* Form controls (contact page). */
+  .field-label {
+    @apply block text-sm text-stone;
+  }
+
+  .field-input {
+    @apply mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none;
+  }
 }
 
 /* Scroll-reveal: elements marked `.reveal` fade + slide up as they enter the

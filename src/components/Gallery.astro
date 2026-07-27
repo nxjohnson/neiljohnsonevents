@@ -72,9 +72,15 @@ const gridSizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
 
     function layoutMasonry() {
       document.querySelectorAll(".masonry").forEach(function (grid) {
-        grid.querySelectorAll(".masonry-item").forEach(function (item) {
-          var span = Math.ceil(item.getBoundingClientRect().height + GAP);
-          item.style.gridRowEnd = "span " + span;
+        var items = grid.querySelectorAll(".masonry-item");
+        // Read all heights first, then write all spans — batching avoids a forced
+        // reflow on every item (a write invalidates layout for the next read).
+        var spans = [];
+        items.forEach(function (item) {
+          spans.push(Math.ceil(item.getBoundingClientRect().height + GAP));
+        });
+        items.forEach(function (item, i) {
+          item.style.gridRowEnd = "span " + spans[i];
         });
       });
     }

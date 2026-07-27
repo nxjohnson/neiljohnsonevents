@@ -25,11 +25,11 @@ const schema = {
   image={images[0]?.src}
   schema={schema}
 >
-  <section class="mx-auto max-w-[1600px] px-[6vw] py-12 sm:px-[4vw] sm:py-16" data-reveal-group>
+  <section class="gutter py-12 sm:py-16" data-reveal-group>
     <h1 class="reveal font-display text-3xl sm:text-5xl">{gallery.portfolioTitle}</h1>
   </section>
 
-  <section class="mx-auto max-w-[1600px] px-[6vw] pb-16 sm:px-[4vw] sm:pb-24">
+  <section class="gutter pb-16 sm:pb-24">
     {
       images.length > 0 ? (
         <Gallery images={images} />

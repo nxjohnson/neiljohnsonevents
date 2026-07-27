@@ -1,0 +1,36 @@
+---
+import SmugMugImage from "./SmugMugImage.astro";
+import type { GalleryCategory } from "../config/galleries";
+import type { ResponsiveImage } from "../lib/smugmug";
+
+interface Props {
+  tiles: { category: GalleryCategory; image: ResponsiveImage | undefined }[];
+}
+
+const { tiles } = Astro.props;
+---
+
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+  {
+    tiles.map(({ category, image }) => (
+      <a
+        href={`/portfolio/${category.slug}`}
+        class="group reveal relative block aspect-[4/5] overflow-hidden bg-stone-light"
+      >
+        {image ? (
+          <SmugMugImage
+            image={image}
+            sizes="(min-width: 640px) 33vw, 100vw"
+            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div class="h-full w-full bg-stone-light" />
+        )}
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+        <span class="absolute bottom-4 left-4 font-display text-3xl text-paper sm:bottom-6 sm:left-6 sm:text-4xl">
+          {category.label}
+        </span>
+      </a>
+    ))
+  }
+</div>

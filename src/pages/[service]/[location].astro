@@ -36,7 +36,7 @@ const schema = {
 ---
 
 <BaseLayout title={title} description={description} image={previewImages[0]?.src} schema={schema}>
-  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24" data-reveal-group>
+  <section class="gutter py-16 sm:py-24" data-reveal-group>
     <h1 class="reveal font-display text-3xl sm:text-5xl">{title}</h1>
     <p class="reveal mt-4 max-w-2xl text-stone">{intro}</p>
     <a
@@ -47,7 +47,7 @@ const schema = {
     </a>
   </section>
 
-  <section class="mx-auto max-w-[1600px] px-[6vw] pb-16 sm:px-[4vw] sm:pb-24">
+  <section class="gutter pb-16 sm:pb-24">
     {
       previewImages.length > 0 ? (
         <Gallery images={previewImages} />

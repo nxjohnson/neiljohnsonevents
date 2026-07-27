@@ -120,8 +120,24 @@ export async function getAlbums(nickname: string): Promise<SmugMugAlbum[]> {
 
 const SIZE_DETAILS_CONCURRENCY = 8;
 
-/** List all images in an album, with size details fetched per-image for responsive srcset. */
-export async function getAlbumImages(albumKey: string): Promise<SmugMugImage[]> {
+// Memoize by album key so an album fetched on multiple pages (e.g. the homepage,
+// the /portfolio index, its category page, and the location landing pages) hits the
+// SmugMug API — and its per-image size-detail fan-out — only once per build. Caches
+// the Promise so concurrent callers dedupe too. Alt text stays per-call because
+// `toResponsiveImage` (the cheap mapping step) runs outside this cache.
+const albumImageCache = new Map<string, Promise<SmugMugImage[]>>();
+
+/** List all images in an album (cached per build), with per-image size details. */
+export function getAlbumImages(albumKey: string): Promise<SmugMugImage[]> {
+  let cached = albumImageCache.get(albumKey);
+  if (!cached) {
+    cached = fetchAlbumImages(albumKey);
+    albumImageCache.set(albumKey, cached);
+  }
+  return cached;
+}
+
+async function fetchAlbumImages(albumKey: string): Promise<SmugMugImage[]> {
   const data = await smugmugFetch<{ Response: { AlbumImage?: SmugMugImage[] } }>(
     `/album/${albumKey}!images`,
     { count: "200" }

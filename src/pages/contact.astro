@@ -6,7 +6,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   title="Contact"
   description="Get in touch to book wedding, corporate event, conference, or headshot photography across Los Angeles County and Orange County."
 >
-  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24" data-reveal-group>
+  <section class="gutter py-16 sm:py-24" data-reveal-group>
     <h1 class="reveal font-display text-3xl sm:text-5xl">Let&rsquo;s Chat!</h1>
     <p class="reveal mt-3 max-w-2xl text-stone">
       I&rsquo;m so excited that you&rsquo;re interested in working with me! Tell me all about
@@ -16,7 +16,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     <form id="contact-form" class="reveal mt-8 max-w-2xl space-y-5">
       <div>
-        <label for="name" class="block text-sm text-stone">
+        <label for="name" class="field-label">
           Name <span class="text-accent">*</span>
         </label>
         <input
@@ -24,12 +24,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           name="name"
           type="text"
           required
-          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+          class="field-input"
         />
       </div>
 
       <div>
-        <label for="email" class="block text-sm text-stone">
+        <label for="email" class="field-label">
           Email <span class="text-accent">*</span>
         </label>
         <input
@@ -37,12 +37,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           name="email"
           type="email"
           required
-          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+          class="field-input"
         />
       </div>
 
       <div>
-        <label for="phone" class="block text-sm text-stone">
+        <label for="phone" class="field-label">
           Phone <span class="text-accent">*</span>
         </label>
         <input
@@ -50,12 +50,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           name="phone"
           type="tel"
           required
-          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+          class="field-input"
         />
       </div>
 
       <div>
-        <label for="eventDate" class="block text-sm text-stone">
+        <label for="eventDate" class="field-label">
           Event Date <span class="text-accent">*</span>
         </label>
         <input
@@ -63,19 +63,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           name="eventDate"
           type="date"
           required
-          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+          class="field-input"
         />
       </div>
 
       <div>
-        <label for="eventType" class="block text-sm text-stone">
+        <label for="eventType" class="field-label">
           Event Type <span class="text-accent">*</span>
         </label>
         <select
           id="eventType"
           name="eventType"
           required
-          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+          class="field-input"
         >
           <option value="">Select an option</option>
           <option value="Wedding">Wedding</option>
@@ -87,7 +87,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
 
       <div>
-        <label for="location" class="block text-sm text-stone">
+        <label for="location" class="field-label">
           Location <span class="text-accent">*</span>
         </label>
         <input
@@ -95,22 +95,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           name="location"
           type="text"
           required
-          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+          class="field-input"
         />
       </div>
 
       <div>
-        <label for="howHeard" class="block text-sm text-stone">How did you hear about me?</label>
+        <label for="howHeard" class="field-label">How did you hear about me?</label>
         <input
           id="howHeard"
           name="howHeard"
           type="text"
-          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+          class="field-input"
         />
       </div>
 
       <div>
-        <label for="message" class="block text-sm text-stone">
+        <label for="message" class="field-label">
           Message <span class="text-accent">*</span>
         </label>
         <textarea
@@ -118,7 +118,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           name="message"
           rows="5"
           required
-          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+          class="field-input"
         ></textarea>
       </div>
 
