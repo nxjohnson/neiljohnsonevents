@@ -168,8 +168,60 @@ Original section order (top to bottom):
 
 ---
 
-## Other Pages (to be reviewed next)
+## Additional global changes (done during the pass)
 
-- ☐ Portfolio (`/portfolio` + Weddings / Events / Headshots galleries)
-- ☐ About (`/about`)
-- ☐ Contact (`/contact`)
+- ✅ **Global side gutters** — every page uses `mx-auto max-w-[1600px]` + `px-[6vw]`/`sm:px-[4vw]`
+  (Nav, Footer, and all page sections). Narrow content (contact form, location intro) is capped
+  and left-aligned inside the global container.
+- ✅ **Base font size = 1.125rem (18px)** on `body` (matches the home "Capturing Memories" body).
+  Explicit size utilities still win. Redundant `text-lg` removed from body copy.
+- ✅ **Footer** — light-gray background (`stone-light` = original `lightAccent` #efefee), borderless,
+  global gutter, normal-case links, roomier vertical padding.
+
+---
+
+## About (`/about`) → [about.astro](src/pages/about.astro)
+
+- ✅ Two-column layout: bio text left, **square (1:1) portrait right**.
+- ✅ No visible heading and no button (matches original); `sr-only` h1 kept for SEO/a11y.
+- ✅ Exact bio copy (fixed the `moments..` double-period typo).
+
+## Contact (`/contact`) → [contact.astro](src/pages/contact.astro)
+
+- ✅ Heading **"Let's Chat!"** + original intro copy.
+- ✅ Full 8-field form (Name, Email, Phone, Event Date, Event Type, Location,
+  How did you hear about me?, Message), single-column, normal-case labels.
+- ✅ Required asterisks on all fields **except** "How did you hear about me?" (matches original).
+- ✅ Submit button **"Submit"**; success message "Thank you! I'll be in touch shortly."
+- ✅ API ([api/contact.ts](src/pages/api/contact.ts)) captures the new phone/location/how-heard fields.
+- ℹ️ Event Type options + input styling are best-guess (original form is JS-rendered; couldn't extract).
+
+## Portfolio index (`/portfolio`) → [portfolio/index.astro](src/pages/portfolio/index.astro)
+
+- ✅ **Built (was missing / would 404).** Three category tiles (Weddings / Events / Headshots),
+  same pinned photos as the home tiles, no visible heading (`sr-only` h1), each links to its gallery.
+
+## Portfolio galleries (`/portfolio/{weddings,events,headshots}`) → [\[category\].astro](src/pages/portfolio/[category].astro)
+
+- ✅ Headings → "Wedding Portfolio" / "Event Portfolio" / "Headshot Portfolio" (`portfolioTitle`).
+- ✅ Removed intro paragraph (original has none); descriptive text kept for SEO meta/schema only.
+- ✅ **Order-preserving masonry gallery** ([Gallery.astro](src/components/Gallery.astro)) — CSS grid +
+  row-span, favors vertical photos, keeps upload order. Applies to location pages too.
+
+## Redirects → [astro.config.mjs](astro.config.mjs)
+
+- ✅ Original home slug `/neil-johnson-events-los-angeles-county-wedding-and-event-photographer`
+  → 301 redirect to `/` (preserves inbound links).
+
+---
+
+## Not in the original (repo additions — kept intentionally)
+
+- SEO location landing pages (`/{service}-photographer/{location}`) — not on the original site;
+  added for search visibility. Show a 6-image preview + link to the full gallery.
+- Custom contact backend (Resend via `/api/contact`) instead of the Squarespace form.
+
+## Sitemap parity check (original vs repo)
+
+All original sitemap URLs are now covered: `/`, `/about`, `/contact`, `/portfolio`,
+`/portfolio/{weddings,events,headshots}`, and the home-slug redirect. ✅

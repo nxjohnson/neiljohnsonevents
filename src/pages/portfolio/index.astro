@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SmugMugImage from "../../components/SmugMugImage.astro";
+import { galleries, type GalleryCategory } from "../../config/galleries";
+import { getGalleryImages } from "../../lib/smugmug";
+
+const galleryImages = await Promise.all(
+  galleries.map((g) => getGalleryImages(g.albumKey, `${g.label} photo`))
+);
+
+// Representative photo per category — mirrors the homepage tiles. Pinned by SmugMug
+// ImageKey so they stay put if an album is reordered. (Keep in sync with index.astro.)
+const PINNED_IMAGE_KEYS: Record<GalleryCategory["slug"], string> = {
+  weddings: "d6nGnqZ", // 30_01-Cass-Winery-Paso-Robles-Wedding-Photography.jpg
+  events: "ntbbBm3", // 01_01-Las-Vegas-Nevada-Concert-Photography.jpg
+  headshots: "jp67F4C", // 15_02-Los-Angeles-County-Business-Headshot-Photography.jpg
+};
+
+const tileImages = galleries.map((g, i) => {
+  const imgs = galleryImages[i];
+  return {
+    category: g,
+    image: imgs.find((img) => img.key === PINNED_IMAGE_KEYS[g.slug]) ?? imgs[0],
+  };
+});
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Portfolio",
+  description:
+    "Wedding, corporate event, conference, and headshot photography portfolio across Los Angeles County and Orange County.",
+};
+---
+
+<BaseLayout
+  title="Portfolio | Los Angeles &amp; Orange County Photographer"
+  description="Browse Neil Johnson Events' wedding, corporate event, conference, and headshot photography portfolio across Los Angeles County and Orange County."
+  schema={schema}
+>
+  {/* Original /portfolio has no visible heading — sr-only h1 keeps SEO/a11y intact. */}
+  <h1 class="sr-only">Portfolio</h1>
+
+  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24" data-reveal-group>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      {
+        tileImages.map(({ category, image }) => (
+          <a
+            href={`/portfolio/${category.slug}`}
+            class="group reveal relative block aspect-[4/5] overflow-hidden bg-stone-light"
+          >
+            {image ? (
+              <SmugMugImage
+                image={image}
+                sizes="(min-width: 640px) 33vw, 100vw"
+                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <div class="h-full w-full bg-stone-light" />
+            )}
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+            <span class="absolute bottom-4 left-4 font-display text-3xl text-paper sm:bottom-6 sm:left-6 sm:text-4xl">
+              {category.label}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

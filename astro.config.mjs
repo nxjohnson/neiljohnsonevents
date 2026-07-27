@@ -13,6 +13,11 @@ import react from '@astrojs/react';
 export default defineConfig({
   site: 'https://www.neiljohnsonevents.com',
 
+  // Preserve the original Squarespace home-page slug → redirect it to the root.
+  redirects: {
+    '/neil-johnson-events-los-angeles-county-wedding-and-event-photographer': '/',
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },
