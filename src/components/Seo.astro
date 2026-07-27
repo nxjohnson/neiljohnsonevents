@@ -10,7 +10,7 @@ interface Props {
 const { title, description, image, noindex = false, schema } = Astro.props;
 
 const siteName = "Neil Johnson Events";
-const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+const fullTitle = title.includes(siteName) ? title : `${siteName} | ${title}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image
   ? new URL(image, Astro.site).toString()
