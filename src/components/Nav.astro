@@ -34,7 +34,7 @@ const currentPath = Astro.url.pathname;
     </button>
 
     <nav class="hidden sm:block" aria-label="Primary">
-      <ul class="flex items-center gap-8 text-base">
+      <ul class="flex items-center gap-8">
         {
           links.map((link) => (
             <li>
@@ -59,7 +59,7 @@ const currentPath = Astro.url.pathname;
     class="hidden border-t border-stone-light sm:hidden"
     aria-label="Primary mobile"
   >
-    <ul class="flex flex-col gap-1 px-5 py-4 text-base">
+    <ul class="flex flex-col gap-1 px-5 py-4">
       {
         links.map((link) => (
           <li>
