@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types",
+    "publish-photos": "git commit --allow-empty -m \"Rebuild: refresh SmugMug galleries\" && git push"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.4",

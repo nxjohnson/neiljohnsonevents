@@ -111,6 +111,19 @@ http://localhost:8788 with `.dev.vars` loaded.
 6. Once verified, point `neiljohnsonevents.com` DNS at Cloudflare and add it as a custom domain in
    the Pages project. Keep Squarespace live until the cutover is confirmed working, then cancel it.
 
+## Publishing new photos
+
+Galleries are fetched from SmugMug at **build time**, so **uploading new photos to a SmugMug album
+does not change the live site until a rebuild runs.** After adding photos, trigger a rebuild:
+
+```sh
+npm run publish-photos
+```
+
+This pushes an empty commit, which triggers the connected Cloudflare build → refetches SmugMug →
+redeploys with the new images. (A Cloudflare deploy hook exists as an alternative trigger, but
+must be hit with an HTTP `POST`, not a plain browser visit.)
+
 ## SEO
 
 - `src/components/Seo.astro` centralizes title/description/canonical/OG/Twitter/JSON-LD for every
