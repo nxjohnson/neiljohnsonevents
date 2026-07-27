@@ -10,12 +10,16 @@ const { images } = Astro.props;
 const gridSizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
 ---
 
-<div class="grid grid-cols-1 items-start gap-2 sm:grid-cols-2 lg:grid-cols-3">
+<!-- Masonry via CSS grid + row-span: items are placed left-to-right in DOM order
+     (preserving the original upload order), and a script sizes each item's row span
+     to its natural height so columns pack tightly. Photos keep their aspect ratio,
+     so vertical photos display tall (favoring portrait orientation). -->
+<div class="masonry grid grid-cols-1 gap-x-6 gap-y-0 [grid-auto-rows:1px] sm:grid-cols-2 lg:grid-cols-3">
   {
     images.map((image, i) => (
       <button
         type="button"
-        class="lightbox-trigger group relative block w-full overflow-hidden bg-stone-light"
+        class="masonry-item lightbox-trigger reveal group relative block w-full self-start overflow-hidden bg-stone-light"
         data-src={image.src}
         data-srcset={image.srcset}
         data-alt={image.alt}
@@ -46,6 +50,36 @@ const gridSizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
   </button>
   <img id="lightbox-image" src="" alt="" class="max-h-[90vh] max-w-[95vw] object-contain" />
 </dialog>
+
+<script>
+  // Masonry: size each item's grid row span to its height so items pack tightly
+  // while keeping DOM (upload) order. Rows are 1px (see [grid-auto-rows:1px]); the
+  // 24px value bakes in the vertical gap below each item.
+  const GAP = 24;
+
+  function layoutMasonry() {
+    document.querySelectorAll<HTMLElement>(".masonry").forEach((grid) => {
+      grid.querySelectorAll<HTMLElement>(".masonry-item").forEach((item) => {
+        const span = Math.ceil(item.getBoundingClientRect().height + GAP);
+        item.style.gridRowEnd = `span ${span}`;
+      });
+    });
+  }
+
+  let resizeTimer: number | undefined;
+  window.addEventListener("resize", () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(layoutMasonry, 150);
+  });
+
+  // Recompute once images finish loading (in case any lack intrinsic dimensions),
+  // and after fonts/full load. Intrinsic width/height keep the first pass correct.
+  document.querySelectorAll<HTMLImageElement>(".masonry img").forEach((img) => {
+    if (!img.complete) img.addEventListener("load", layoutMasonry, { once: true });
+  });
+  window.addEventListener("load", layoutMasonry);
+  layoutMasonry();
+</script>
 
 <script>
   const dialog = document.getElementById("lightbox") as HTMLDialogElement | null;

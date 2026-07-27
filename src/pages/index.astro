@@ -27,7 +27,15 @@ const tileImages = galleries.map((g, i) => ({
 }));
 
 const weddingImages = galleryImages[galleries.findIndex((g) => g.slug === "weddings")] ?? [];
+
+// Original home page opens with a single full-width photo (no text overlay):
+// the Cass Winery, Paso Robles star-trail wedding shot, shown at its natural aspect ratio.
 const hero = pinnedImage("weddings", weddingImages);
+
+// "Capturing Memories" section — portrait photo on the right (original used the
+// Bahia Resort Hotel, San Diego County wedding shot).
+const CAPTURING_MEMORIES_IMAGE_KEY = "D9K3Hr7"; // 09_03-Bahia-Resort-Hotel-San-Diego-County-Wedding-Photography.jpg
+const capturingImage = weddingImages.find((img) => img.key === CAPTURING_MEMORIES_IMAGE_KEY);
 
 // Misc gallery (https://clients.neiljohnsonevents.com/Website/Misc) — one-off photos
 // that don't belong to a portfolio category, e.g. the homepage testimonial photo.
@@ -54,62 +62,51 @@ const schema = {
   description="Neil Johnson Events — wedding, corporate event, conference, and headshot photography across Los Angeles County and Orange County."
   schema={schema}
 >
-  <!-- Hero -->
-  <section class="relative flex min-h-[70vh] items-end sm:min-h-[85vh]">
+  <!-- Hero: single full-width photo (inset with the site gutter), no text overlay -->
+  <section class="mx-auto max-w-[1600px] px-[6vw] sm:px-[4vw]">
     {
       hero ? (
-        <SmugMugImage
-          image={hero}
-          priority
-          sizes="100vw"
-          class="absolute inset-0 h-full w-full object-cover"
-        />
+        <SmugMugImage image={hero} priority sizes="(min-width: 1600px) 1472px, 92vw" class="reveal block h-auto w-full" />
       ) : (
-        <div class="absolute inset-0 bg-gradient-to-b from-stone-light to-stone" />
+        <div class="aspect-[16/10] w-full bg-gradient-to-b from-stone-light to-stone" />
       )
     }
-    <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent"></div>
+  </section>
 
-    <div class="relative z-10 mx-auto w-full max-w-6xl px-5 pb-12 sm:px-8 sm:pb-16">
-      <h1 class="max-w-xl font-display text-4xl leading-tight text-paper sm:text-6xl">
-        Wedding &amp; Event Photography in Los Angeles &amp; Orange County
-      </h1>
-      <p class="mt-4 max-w-md text-paper/90">
-        Capturing your moments with a blend of creativity and precision.
-      </p>
-      <a
-        href="/contact"
-        class="mt-6 inline-block bg-paper px-6 py-3 text-sm uppercase tracking-wider text-ink transition-colors hover:bg-accent hover:text-paper"
-      >
-        Reserve Your Date
-      </a>
+  <!-- Capturing Memories: text left, portrait photo right -->
+  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24">
+    <div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16" data-reveal-group>
+      <div>
+        <h2 class="reveal text-5xl sm:text-6xl">Capturing Memories</h2>
+        <p class="reveal mt-6 leading-relaxed text-stone">
+          Every event is filled with moments that make it truly special. I strive to capture these
+          moments with a blend of creativity and precision, ensuring that each photograph reflects
+          the beauty and emotion of your day. Together, we can create a collection of memories
+          you&rsquo;ll always cherish.
+        </p>
+        <a href="/about" class="btn-primary reveal mt-8"> Learn More </a>
+      </div>
+      {
+        capturingImage && (
+          <SmugMugImage
+            image={capturingImage}
+            sizes="(min-width: 768px) 46vw, 92vw"
+            class="reveal block aspect-[3/4] w-full object-cover object-[center_75%]"
+          />
+        )
+      }
     </div>
   </section>
 
-  <!-- About blurb -->
-  <section class="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-24">
-    <h2 class="font-display text-3xl sm:text-4xl">A Blend of Creativity &amp; Precision</h2>
-    <p class="mt-4 text-stone">
-      Based in Los Angeles County, Neil Johnson Events photographs weddings, corporate events,
-      conferences, and headshots throughout LA and Orange County — striving to capture every
-      moment authentically.
-    </p>
-    <a
-      href="/about"
-      class="mt-6 inline-block border-b border-ink pb-1 text-sm uppercase tracking-wider transition-colors hover:border-accent hover:text-accent"
-    >
-      Learn More
-    </a>
-  </section>
-
-  <!-- Category tiles -->
-  <section class="px-5 pb-16 sm:px-8 sm:pb-24">
-    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-3 sm:grid-cols-3">
+  <!-- Photography For Every Occasion -->
+  <section class="mx-auto max-w-[1600px] px-[6vw] pb-16 sm:px-[4vw] sm:pb-24" data-reveal-group>
+    <h2 class="reveal mb-10 text-center text-5xl sm:mb-14 sm:text-6xl">Photography For Every Occasion</h2>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
       {
         tileImages.map(({ category, image }) => (
           <a
             href={`/portfolio/${category.slug}`}
-            class="group relative block aspect-[4/5] overflow-hidden bg-stone-light"
+            class="group reveal relative block aspect-[4/5] overflow-hidden bg-stone-light"
           >
             {image ? (
               <SmugMugImage
@@ -121,7 +118,7 @@ const schema = {
               <div class="h-full w-full bg-stone-light" />
             )}
             <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
-            <span class="absolute bottom-4 left-4 font-display text-2xl text-paper sm:bottom-6 sm:left-6 sm:text-3xl">
+            <span class="absolute bottom-4 left-4 font-display text-3xl text-paper sm:bottom-6 sm:left-6 sm:text-4xl">
               {category.label}
             </span>
           </a>
@@ -130,47 +127,44 @@ const schema = {
     </div>
   </section>
 
-  <!-- Testimonial -->
-  <section class="bg-ink px-5 py-16 text-center text-paper sm:px-8 sm:py-24">
-    {
-      testimonialImage && (
-        <SmugMugImage
-          image={testimonialImage}
-          sizes="(min-width: 640px) 320px, 60vw"
-          class="mx-auto mb-8 w-48 object-cover sm:w-64"
-        />
-      )
-    }
-    <blockquote class="mx-auto max-w-2xl">
-      <p class="font-display text-2xl leading-relaxed sm:text-3xl">
-        &ldquo;From start to finish, the experience was nothing short of amazing.&rdquo;
-      </p>
-      <footer class="mt-4 text-sm uppercase tracking-wider text-paper/70">
-        — Laboni &amp; Matthew
-      </footer>
-    </blockquote>
+  <!-- Testimonial: photo left, quote right -->
+  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24">
+    <div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16" data-reveal-group>
+      {
+        testimonialImage && (
+          <SmugMugImage
+            image={testimonialImage}
+            sizes="(min-width: 768px) 46vw, 92vw"
+            class="reveal block aspect-square w-full object-cover object-center"
+          />
+        )
+      }
+      <blockquote class="reveal">
+        <p class="font-display text-4xl leading-tight sm:text-5xl">
+          &ldquo;From start to finish, the experience was nothing short of amazing&rdquo;
+        </p>
+        <footer class="mt-6 text-stone">— Laboni and Matthew</footer>
+      </blockquote>
+    </div>
   </section>
 
-  <!-- CTA -->
-  <section class="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-24">
-    {
-      ctaImage && (
-        <SmugMugImage
-          image={ctaImage}
-          sizes="(min-width: 640px) 320px, 60vw"
-          class="mx-auto mb-8 w-48 object-cover sm:w-64"
-        />
-      )
-    }
-    <h2 class="font-display text-3xl sm:text-4xl">Reserve Your Date</h2>
-    <p class="mt-4 text-stone">
-      Booking weddings, events, conferences, and headshot sessions across LA and Orange County.
-    </p>
-    <a
-      href="/contact"
-      class="mt-6 inline-block bg-ink px-6 py-3 text-sm uppercase tracking-wider text-paper transition-colors hover:bg-accent"
-    >
-      Contact Me
-    </a>
+  <!-- CTA: text left, photo right -->
+  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24">
+    <div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16" data-reveal-group>
+      <div>
+        <h2 class="reveal text-5xl sm:text-6xl">Reserve your date</h2>
+        <p class="reveal mt-6 text-stone">I&rsquo;m excited to hear more about your special event!</p>
+        <a href="/contact" class="btn-primary reveal mt-8"> Contact Me </a>
+      </div>
+      {
+        ctaImage && (
+          <SmugMugImage
+            image={ctaImage}
+            sizes="(min-width: 768px) 46vw, 92vw"
+            class="reveal block aspect-square w-full object-cover object-center"
+          />
+        )
+      }
+    </div>
   </section>
 </BaseLayout>

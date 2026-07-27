@@ -6,69 +6,112 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   title="Contact"
   description="Get in touch to book wedding, corporate event, conference, or headshot photography across Los Angeles County and Orange County."
 >
-  <section class="mx-auto max-w-2xl px-5 py-16 sm:px-8 sm:py-24">
-    <h1 class="font-display text-3xl sm:text-5xl">Reserve Your Date</h1>
-    <p class="mt-3 text-stone">
-      Tell me a bit about your event and I'll get back to you within 1–2 business days.
+  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24" data-reveal-group>
+    <h1 class="reveal font-display text-3xl sm:text-5xl">Let&rsquo;s Chat!</h1>
+    <p class="reveal mt-3 max-w-2xl text-stone">
+      I&rsquo;m so excited that you&rsquo;re interested in working with me! Tell me all about
+      yourself, the type of photography you&rsquo;re looking for, as much detail as you can provide,
+      and any questions you have. Can&rsquo;t wait to hear from you!
     </p>
 
-    <form id="contact-form" class="mt-8 space-y-5">
-      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label for="name" class="block text-sm uppercase tracking-wider text-stone">Name</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            required
-            class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
-          />
-        </div>
-        <div>
-          <label for="email" class="block text-sm uppercase tracking-wider text-stone">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
-          />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label for="eventType" class="block text-sm uppercase tracking-wider text-stone">
-            Event Type
-          </label>
-          <select
-            id="eventType"
-            name="eventType"
-            class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
-          >
-            <option value="Wedding">Wedding</option>
-            <option value="Corporate Event">Corporate Event</option>
-            <option value="Conference">Conference</option>
-            <option value="Headshots">Headshots</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div>
-          <label for="eventDate" class="block text-sm uppercase tracking-wider text-stone">
-            Event Date
-          </label>
-          <input
-            id="eventDate"
-            name="eventDate"
-            type="date"
-            class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
-          />
-        </div>
+    <form id="contact-form" class="reveal mt-8 max-w-2xl space-y-5">
+      <div>
+        <label for="name" class="block text-sm text-stone">
+          Name <span class="text-accent">*</span>
+        </label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+        />
       </div>
 
       <div>
-        <label for="message" class="block text-sm uppercase tracking-wider text-stone">
-          Message
+        <label for="email" class="block text-sm text-stone">
+          Email <span class="text-accent">*</span>
+        </label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="phone" class="block text-sm text-stone">
+          Phone <span class="text-accent">*</span>
+        </label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          required
+          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="eventDate" class="block text-sm text-stone">
+          Event Date <span class="text-accent">*</span>
+        </label>
+        <input
+          id="eventDate"
+          name="eventDate"
+          type="date"
+          required
+          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="eventType" class="block text-sm text-stone">
+          Event Type <span class="text-accent">*</span>
+        </label>
+        <select
+          id="eventType"
+          name="eventType"
+          required
+          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+        >
+          <option value="">Select an option</option>
+          <option value="Wedding">Wedding</option>
+          <option value="Corporate Event">Corporate Event</option>
+          <option value="Conference">Conference</option>
+          <option value="Headshots">Headshots</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="location" class="block text-sm text-stone">
+          Location <span class="text-accent">*</span>
+        </label>
+        <input
+          id="location"
+          name="location"
+          type="text"
+          required
+          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="howHeard" class="block text-sm text-stone">How did you hear about me?</label>
+        <input
+          id="howHeard"
+          name="howHeard"
+          type="text"
+          class="mt-1 w-full border border-stone-light bg-paper px-3 py-2 focus:border-accent focus:outline-none"
+        />
+      </div>
+
+      <div>
+        <label for="message" class="block text-sm text-stone">
+          Message <span class="text-accent">*</span>
         </label>
         <textarea
           id="message"
@@ -79,12 +122,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         ></textarea>
       </div>
 
-      <button
-        type="submit"
-        class="w-full bg-ink px-6 py-3 text-sm uppercase tracking-wider text-paper transition-colors hover:bg-accent sm:w-auto"
-      >
-        Send Message
-      </button>
+      <button type="submit" class="btn-primary w-full sm:w-auto"> Submit </button>
 
       <p id="form-status" class="text-sm" role="status" aria-live="polite"></p>
     </form>
@@ -116,7 +154,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
       if (!res.ok) throw new Error("Request failed");
 
-      status.textContent = "Thanks! Your message has been sent — I'll be in touch soon.";
+      status.textContent = "Thank you! I'll be in touch shortly.";
       status.className = "text-sm text-accent";
       form.reset();
     } catch {

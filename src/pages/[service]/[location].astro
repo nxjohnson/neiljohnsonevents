@@ -36,18 +36,18 @@ const schema = {
 ---
 
 <BaseLayout title={title} description={description} image={previewImages[0]?.src} schema={schema}>
-  <section class="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-24">
-    <h1 class="font-display text-3xl sm:text-5xl">{title}</h1>
-    <p class="mt-4 text-stone">{intro}</p>
+  <section class="mx-auto max-w-[1600px] px-[6vw] py-16 sm:px-[4vw] sm:py-24" data-reveal-group>
+    <h1 class="reveal font-display text-3xl sm:text-5xl">{title}</h1>
+    <p class="reveal mt-4 max-w-2xl text-stone">{intro}</p>
     <a
       href="/contact"
-      class="mt-6 inline-block bg-ink px-6 py-3 text-sm uppercase tracking-wider text-paper transition-colors hover:bg-accent"
+      class="btn-primary reveal mt-6"
     >
       Reserve Your Date
     </a>
   </section>
 
-  <section class="mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-24">
+  <section class="mx-auto max-w-[1600px] px-[6vw] pb-16 sm:px-[4vw] sm:pb-24">
     {
       previewImages.length > 0 ? (
         <Gallery images={previewImages} />
@@ -57,7 +57,7 @@ const schema = {
     }
     {
       gallery && (
-        <div class="mt-8 text-center">
+        <div class="reveal mt-8 text-center">
           <a
             href={`/portfolio/${gallery.slug}`}
             class="border-b border-ink pb-1 text-sm uppercase tracking-wider transition-colors hover:border-accent hover:text-accent"

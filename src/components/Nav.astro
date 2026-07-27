@@ -11,13 +11,13 @@ const links = [
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-50 bg-paper/95 backdrop-blur border-b border-stone-light">
-  <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+<header class="sticky top-0 z-50 bg-paper/95 backdrop-blur">
+  <div class="mx-auto flex max-w-[1600px] items-center justify-between px-[6vw] py-4 sm:px-[4vw]">
     <a href="/" class="shrink-0">
       <img
         src="/NeilJohnsonEventsLogo.png"
         alt="Neil Johnson Events"
-        class="h-12 w-auto sm:h-14"
+        class="h-[68px] w-auto sm:h-[75px]"
       />
     </a>
 
@@ -34,7 +34,7 @@ const currentPath = Astro.url.pathname;
     </button>
 
     <nav class="hidden sm:block" aria-label="Primary">
-      <ul class="flex items-center gap-8 text-sm uppercase tracking-wider">
+      <ul class="flex items-center gap-8 text-base">
         {
           links.map((link) => (
             <li>
@@ -59,7 +59,7 @@ const currentPath = Astro.url.pathname;
     class="hidden border-t border-stone-light sm:hidden"
     aria-label="Primary mobile"
   >
-    <ul class="flex flex-col gap-1 px-5 py-4 text-base uppercase tracking-wider">
+    <ul class="flex flex-col gap-1 px-5 py-4 text-base">
       {
         links.map((link) => (
           <li>

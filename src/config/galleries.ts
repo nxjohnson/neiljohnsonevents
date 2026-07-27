@@ -8,7 +8,11 @@ export interface GalleryCategory {
   slug: "weddings" | "events" | "headshots";
   label: string;
   albumKey: string;
+  /** Visible <h1> on the portfolio page (matches the original site). */
+  portfolioTitle: string;
+  /** Descriptive heading used for the SEO <title> and schema (not shown on the page). */
   heading: string;
+  /** Used for the SEO meta description and schema (not shown on the page). */
   description: string;
 }
 
@@ -17,6 +21,7 @@ export const galleries: GalleryCategory[] = [
     slug: "weddings",
     label: "Weddings",
     albumKey: "hDBJG2",
+    portfolioTitle: "Wedding Portfolio",
     heading: "Wedding Photography",
     description:
       "Wedding photography across Los Angeles County and Orange County — capturing every moment with creativity and precision.",
@@ -25,6 +30,7 @@ export const galleries: GalleryCategory[] = [
     slug: "events",
     label: "Events",
     albumKey: "6wRgR8",
+    portfolioTitle: "Event Portfolio",
     heading: "Corporate Event & Conference Photography",
     description:
       "Corporate event and conference photography for businesses across Los Angeles County and Orange County.",
@@ -33,6 +39,7 @@ export const galleries: GalleryCategory[] = [
     slug: "headshots",
     label: "Headshots",
     albumKey: "x5mcLx",
+    portfolioTitle: "Headshot Portfolio",
     heading: "Headshot Photography",
     description:
       "Professional headshot photography for individuals and businesses across Los Angeles County and Orange County.",

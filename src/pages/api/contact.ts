@@ -13,8 +13,11 @@ interface ContactEnv {
 interface ContactPayload {
   name?: string;
   email?: string;
+  phone?: string;
   eventType?: string;
   eventDate?: string;
+  location?: string;
+  howHeard?: string;
   message?: string;
 }
 
@@ -37,8 +40,11 @@ export const POST: APIRoute = async ({ request }) => {
 
   const name = (payload.name ?? "").trim();
   const email = (payload.email ?? "").trim();
+  const phone = (payload.phone ?? "").trim();
   const eventType = (payload.eventType ?? "").trim();
   const eventDate = (payload.eventDate ?? "").trim();
+  const location = (payload.location ?? "").trim();
+  const howHeard = (payload.howHeard ?? "").trim();
   const message = (payload.message ?? "").trim();
 
   if (!name || !email || !message || !EMAIL_RE.test(email)) {
@@ -55,8 +61,11 @@ export const POST: APIRoute = async ({ request }) => {
   const emailBody = [
     `Name: ${name}`,
     `Email: ${email}`,
+    phone && `Phone: ${phone}`,
     eventType && `Event type: ${eventType}`,
     eventDate && `Event date: ${eventDate}`,
+    location && `Location: ${location}`,
+    howHeard && `How did you hear about me?: ${howHeard}`,
     "",
     message,
   ]

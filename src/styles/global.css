@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Cormorant Garamond", "Georgia", serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant", "Georgia", serif;
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink: #171614;
-  --color-paper: #faf8f5;
-  --color-stone: #8a8377;
-  --color-stone-light: #e7e3da;
-  --color-accent: #a8875f;
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-stone: #5f5f5f;
+  --color-stone-light: #efefee;
+  --color-accent: #a3826c;
 }
 
 html {
@@ -19,6 +19,10 @@ body {
   background-color: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  /* Global base text size (matches the homepage "Capturing Memories" body).
+     Text with an explicit Tailwind size utility (text-sm, text-lg, …) still wins. */
+  font-size: 1.125rem;
+  line-height: 1.6;
 }
 
 h1,
@@ -26,6 +30,48 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Site-wide primary button — matches the original's solid, pill-shaped,
+   normal-case accent button. */
+@layer components {
+  .btn-primary {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: var(--color-accent);
+    color: var(--color-paper);
+    padding: 1.2rem 2.4rem;
+    font-size: 1.08rem;
+    line-height: 1;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+}
+
+/* Scroll-reveal: elements marked `.reveal` fade + slide up as they enter the
+   viewport (matches the original's global fade/slide-in animation). Only active
+   when JS is on (`html.js`, set synchronously before paint to avoid a flash) and
+   the visitor hasn't asked to reduce motion. An IntersectionObserver in
+   BaseLayout adds `.is-visible`; `--reveal-delay` staggers grouped children. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s ease,
+      transform 0.7s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
 }
