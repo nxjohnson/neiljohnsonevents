@@ -16,23 +16,31 @@ const gridSizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
      so vertical photos display tall (favoring portrait orientation). -->
 <div class="masonry grid grid-cols-1 gap-x-6 gap-y-0 [grid-auto-rows:1px] sm:grid-cols-2 lg:grid-cols-3">
   {
-    images.map((image, i) => (
-      <button
-        type="button"
-        class="masonry-item lightbox-trigger reveal group relative block w-full self-start overflow-hidden bg-stone-light"
-        data-src={image.src}
-        data-srcset={image.srcset}
-        data-alt={image.alt}
-        aria-label={`View larger image: ${image.alt}`}
-      >
-        <SmugMugImage
-          image={image}
-          sizes={gridSizes}
-          priority={i < 3}
-          class="h-auto w-full transition-transform duration-300 group-hover:scale-105"
-        />
-      </button>
-    ))
+    images.map((image, i) => {
+      // Approximate row span from the intrinsic aspect ratio (~475px reference column
+      // width) so items are roughly laid out before JS runs — this prevents the
+      // pre-layout "cram" that would otherwise make the reveal observer reveal every
+      // item at once. The inline script below refines each span to the exact height.
+      const estRows = (image.width ? Math.round((475 * image.height) / image.width) : 400) + 24;
+      return (
+        <button
+          type="button"
+          class="masonry-item lightbox-trigger reveal group relative block w-full self-start overflow-hidden bg-stone-light"
+          style={`grid-row-end: span ${estRows}`}
+          data-src={image.src}
+          data-srcset={image.srcset}
+          data-alt={image.alt}
+          aria-label={`View larger image: ${image.alt}`}
+        >
+          <SmugMugImage
+            image={image}
+            sizes={gridSizes}
+            priority={i < 3}
+            class="h-auto w-full transition-transform duration-300 group-hover:scale-105"
+          />
+        </button>
+      );
+    })
   }
 </div>
 
@@ -51,34 +59,40 @@ const gridSizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
   <img id="lightbox-image" src="" alt="" class="max-h-[90vh] max-w-[95vw] object-contain" />
 </dialog>
 
-<script>
-  // Masonry: size each item's grid row span to its height so items pack tightly
-  // while keeping DOM (upload) order. Rows are 1px (see [grid-auto-rows:1px]); the
-  // 24px value bakes in the vertical gap below each item.
-  const GAP = 24;
+<!-- Inline (not a bundled module) so it runs during parse — BEFORE the end-of-body
+     scroll-reveal observer in BaseLayout. Otherwise the observer would evaluate item
+     positions while they're still crammed at the top (pre-layout), see them all "in
+     view", and reveal everything at once (killing the scroll animation). -->
+<script is:inline>
+  (function () {
+    // Masonry: size each item's grid row span to its height so items pack tightly
+    // while keeping DOM (upload) order. Rows are 1px (see [grid-auto-rows:1px]); the
+    // 24px value bakes in the vertical gap below each item.
+    var GAP = 24;
 
-  function layoutMasonry() {
-    document.querySelectorAll<HTMLElement>(".masonry").forEach((grid) => {
-      grid.querySelectorAll<HTMLElement>(".masonry-item").forEach((item) => {
-        const span = Math.ceil(item.getBoundingClientRect().height + GAP);
-        item.style.gridRowEnd = `span ${span}`;
+    function layoutMasonry() {
+      document.querySelectorAll(".masonry").forEach(function (grid) {
+        grid.querySelectorAll(".masonry-item").forEach(function (item) {
+          var span = Math.ceil(item.getBoundingClientRect().height + GAP);
+          item.style.gridRowEnd = "span " + span;
+        });
       });
+    }
+
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(layoutMasonry, 150);
     });
-  }
 
-  let resizeTimer: number | undefined;
-  window.addEventListener("resize", () => {
-    window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(layoutMasonry, 150);
-  });
-
-  // Recompute once images finish loading (in case any lack intrinsic dimensions),
-  // and after fonts/full load. Intrinsic width/height keep the first pass correct.
-  document.querySelectorAll<HTMLImageElement>(".masonry img").forEach((img) => {
-    if (!img.complete) img.addEventListener("load", layoutMasonry, { once: true });
-  });
-  window.addEventListener("load", layoutMasonry);
-  layoutMasonry();
+    // Recompute once images finish loading (in case any lack intrinsic dimensions)
+    // and after full load. Intrinsic width/height keep the first pass correct.
+    document.querySelectorAll(".masonry img").forEach(function (img) {
+      if (!img.complete) img.addEventListener("load", layoutMasonry, { once: true });
+    });
+    window.addEventListener("load", layoutMasonry);
+    layoutMasonry();
+  })();
 </script>
 
 <script>
