@@ -110,7 +110,7 @@ const schema = {
     </div>
   </section>
 
-  <!-- CTA: text left, photo right -->
+  <!-- CTA: text left, photo right on tablet+; photo first when stacked on mobile -->
   <section class="gutter py-16 sm:py-24">
     <div class="split-2" data-reveal-group>
       <div>
@@ -123,7 +123,7 @@ const schema = {
           <SmugMugImage
             image={ctaImage}
             sizes="(min-width: 768px) 46vw, 92vw"
-            class="reveal block aspect-square w-full object-cover object-center"
+            class="reveal order-first block aspect-square w-full object-cover object-center md:order-none"
           />
         )
       }
